@@ -11,5 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerMenu.unity
+    guid: 2f9b96b2d9713934484afbd5dab4c821
+  - enabled: 1
+    path: Assets/Scenes/GameOnline.unity
+    guid: bc0e8175f6051e644ab8068d8735227d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

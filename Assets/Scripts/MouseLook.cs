@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform mainCamera;
+    public Transform cameraPivot; // Assigna aquí el "CameraPivot" (pare de la càmera)
     public Transform armsAndWeaponPivot;
     public float mouseSensibility = 150f;
     public float minVerticalAngle = -70f;
@@ -19,13 +19,9 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
-        if (Cursor.lockState != CursorLockMode.Locked)
-        {
-            return;
-        }
+        if (Cursor.lockState != CursorLockMode.Locked) return;
 
         Vector2 mouseDelta = Vector2.zero;
-
         if (Mouse.current != null)
         {
             mouseDelta = Mouse.current.delta.ReadValue();
@@ -37,13 +33,18 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, minVerticalAngle, maxVerticalAngle);
 
-        mainCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        // Rotem el PIVOT, deixant la rotació local de la càmera lliure per al Shake
+        if (cameraPivot != null)
+        {
+            cameraPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        }
 
         if (armsAndWeaponPivot != null)
         {
             armsAndWeaponPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         }
 
+        // Rotació horitzontal del jugador
         transform.Rotate(Vector3.up * mouseX);
     }
 }

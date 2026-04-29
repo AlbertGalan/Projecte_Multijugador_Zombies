@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class MainMenuHUDManager : MonoBehaviour
 {
     [Header("UI Buttons")]
-    [SerializeField] private Button playButton;
+    [SerializeField] private Button playButton;    
+    [SerializeField] private Button multiplayerButton;
     [SerializeField] private Button exitButton;
 
     [Header("Scene Settings")]
@@ -22,6 +23,11 @@ public class MainMenuHUDManager : MonoBehaviour
         {
             exitButton.onClick.AddListener(OnExitClicked);
         }
+
+        if (multiplayerButton != null)
+        {
+            multiplayerButton.onClick.AddListener(OnMultiplayerClicked);
+        }
     }
 
     private void OnDestroy()
@@ -35,6 +41,11 @@ public class MainMenuHUDManager : MonoBehaviour
         {
             exitButton.onClick.RemoveListener(OnExitClicked);
         }
+
+        if (multiplayerButton != null)
+        {
+            multiplayerButton.onClick.RemoveListener(OnMultiplayerClicked);
+        }
     }
 
     public void OnPlayClicked()
@@ -45,5 +56,10 @@ public class MainMenuHUDManager : MonoBehaviour
     public void OnExitClicked()
     {
         Application.Quit();
+    }
+
+    public void OnMultiplayerClicked()
+    {
+        SceneManager.LoadScene("MultiplayerMenu");
     }
 }

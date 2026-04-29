@@ -9,6 +9,8 @@ public class WeaponManager : MonoBehaviour
 
     [SerializeField] private Animator weaponAnimator;
     [SerializeField] private float shootAnimationDuration = 0.1f;
+    [SerializeField] private AudioSource shootAudioSource;
+    [SerializeField] private AudioClip shootSfx;
 
     private PlayerManager playerManager;
 
@@ -23,6 +25,11 @@ public class WeaponManager : MonoBehaviour
         if (weaponAnimator == null)
         {
             weaponAnimator = GetComponentInChildren<Animator>();
+        }
+
+        if (shootAudioSource == null)
+        {
+            shootAudioSource = GetComponent<AudioSource>();
         }
     }
 
@@ -47,6 +54,18 @@ public class WeaponManager : MonoBehaviour
         {
             Debug.LogWarning("WeaponManager: playerCam no assignada.");
             return;
+        }
+
+        if (shootAudioSource != null)
+        {
+            if (shootSfx != null)
+            {
+                shootAudioSource.PlayOneShot(shootSfx);
+            }
+            else
+            {
+                shootAudioSource.Play();
+            }
         }
 
         if (weaponAnimator != null)

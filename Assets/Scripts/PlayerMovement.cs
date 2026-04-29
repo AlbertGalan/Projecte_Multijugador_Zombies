@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
 	private Vector3 velocity;
 	public float gravity = -9.81f;
 	public float moveSpeed = 5f;
+	public float runSpeed = 10f;
 	public float jumpHeight = 1.5f;
 	public float coyoteTime = 0.1f;
 	public float jumpBufferTime = 0.12f;
@@ -97,8 +98,14 @@ public class PlayerMovement : MonoBehaviour
 
 		input = Vector2.ClampMagnitude(input, 1f);
 
+		float currentSpeed = moveSpeed;
+		if (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed)
+		{
+			currentSpeed = runSpeed;
+		}
+
 		Vector3 move = transform.right * input.x + transform.forward * input.y;
-		controller.Move(move * moveSpeed * Time.deltaTime);
+		controller.Move(move * currentSpeed * Time.deltaTime);
 
 		if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
 		{
