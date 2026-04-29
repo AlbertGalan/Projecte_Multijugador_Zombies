@@ -7,6 +7,9 @@ public class WeaponManager : MonoBehaviour
     public float range = 100f; // Fins on volem que arribin els tirs
     public float damage = 25f;
 
+    [SerializeField] private Animator weaponAnimator;
+    [SerializeField] private float shootAnimationDuration = 0.1f;
+
     private PlayerManager playerManager;
 
     private void Start()
@@ -15,6 +18,11 @@ public class WeaponManager : MonoBehaviour
         if (playerManager == null)
         {
             playerManager = FindAnyObjectByType<PlayerManager>();
+        }
+
+        if (weaponAnimator == null)
+        {
+            weaponAnimator = GetComponentInChildren<Animator>();
         }
     }
 
@@ -41,6 +49,17 @@ public class WeaponManager : MonoBehaviour
             return;
         }
 
+        if (weaponAnimator != null)
+        {
+            weaponAnimator.SetBool("isShooting", true);
+            CancelInvoke(nameof(ResetShootingAnimation));
+            Invoke(nameof(ResetShootingAnimation), shootAnimationDuration);
+        }
+        else
+        {
+            Debug.LogWarning("WeaponManager: weaponAnimator no assignat.");
+        }
+
         RaycastHit hit;
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {
@@ -53,6 +72,14 @@ public class WeaponManager : MonoBehaviour
                     playerManager.AddScore(enemyManager.ScoreValue);
                 }
             }
+        }
+    }
+
+    private void ResetShootingAnimation()
+    {
+        if (weaponAnimator != null)
+        {
+            weaponAnimator.SetBool("isShooting", false);
         }
     }
 }
