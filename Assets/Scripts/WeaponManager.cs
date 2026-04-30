@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private AudioSource shootAudioSource;
     [SerializeField] private AudioClip shootSfx;
 
+    public PhotonView photonView;
     private PlayerManager playerManager;
 
     private void Start()
@@ -35,7 +37,12 @@ public class WeaponManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+	{
+		if(PhotonNetwork.InRoom && !photonView.IsMine)
+		{
+			return;
+		}
+        
         if (Cursor.lockState != CursorLockMode.Locked)
         {
             return;

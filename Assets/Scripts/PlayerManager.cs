@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-
+using Photon.Pun;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stats")]
@@ -30,6 +30,7 @@ public class PlayerManager : MonoBehaviour
 
     public int CurrentScore => score;
 
+    public PhotonView photonView;
     void Start()
     {
         health = maxHealth;
@@ -52,8 +53,13 @@ public class PlayerManager : MonoBehaviour
         UpdateHUD();
     }
 
-    void Update()
-    {
+   void Update()
+	{
+		if(PhotonNetwork.InRoom && !photonView.IsMine)
+		{
+            playerCameraTransform.gameObject.SetActive(false); // Desactiva la càmera dels altres jugadors
+			return;
+		}
         // Lògica del Camera Shake (Independint del MouseLook)
         if (!isDead && shakeTime < shakeDuration)
         {

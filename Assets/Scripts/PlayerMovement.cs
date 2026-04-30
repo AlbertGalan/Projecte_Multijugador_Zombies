@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
 	private float coyoteTimeCounter;
 	private float jumpBufferCounter;
 
+	public PhotonView photonView;
+
 	void Reset()
 	{
 		controller = GetComponent<CharacterController>();
@@ -37,6 +40,10 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
 	{
+		if(PhotonNetwork.InRoom && !photonView.IsMine)
+		{
+			return;
+		}
 		// Mirar si estic tocant el terra
 		if (groundCheck != null)
 		{

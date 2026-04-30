@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using Photon.Pun;
 public class MouseLook : MonoBehaviour
 {
     public Transform cameraPivot; // Assigna aquí el "CameraPivot" (pare de la càmera)
@@ -11,14 +11,20 @@ public class MouseLook : MonoBehaviour
 
     private float xRotation = 0f;
 
+    public PhotonView photonView; 
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    void Update()
-    {
+ void Update()
+	{
+		if(PhotonNetwork.InRoom && !photonView.IsMine)
+		{
+			return;
+		}
         if (Cursor.lockState != CursorLockMode.Locked) return;
 
         Vector2 mouseDelta = Vector2.zero;

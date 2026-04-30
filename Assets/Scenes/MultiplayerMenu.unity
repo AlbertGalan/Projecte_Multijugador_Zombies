@@ -104658,6 +104658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkingManager
   multiplayerButton: {fileID: 863513259}
+  multiplayerSceneGameName: GameOnline
 --- !u!1001 &1873573807
 PrefabInstance:
   m_ObjectHideFlags: 0

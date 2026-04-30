@@ -828,7 +828,7 @@ GameObject:
   - component: {fileID: 7089152173956966359}
   - component: {fileID: 2056960471353706094}
   m_Layer: 0
-  m_Name: FPS
+  m_Name: First_Person_Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -871,6 +871,7 @@ MonoBehaviour:
   mouseSensibility: 100
   minVerticalAngle: -45
   maxVerticalAngle: 65
+  photonView: {fileID: 2056960471353706094}
 --- !u!143 &6058139584933712380
 CharacterController:
   m_ObjectHideFlags: 0
@@ -920,6 +921,7 @@ MonoBehaviour:
   jumpHeight: 1.5
   coyoteTime: 0.1
   jumpBufferTime: 0.12
+  photonView: {fileID: 2056960471353706094}
 --- !u!114 &271913122203962686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,6 +942,7 @@ MonoBehaviour:
   roundText: {fileID: 2391591402487750783}
   playerCameraTransform: {fileID: 1035704972578990855}
   hitPanel: {fileID: 8309608712939186002}
+  photonView: {fileID: 2056960471353706094}
 --- !u!114 &8610594516215382309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -959,6 +962,7 @@ MonoBehaviour:
   shootAnimationDuration: 0.1
   shootAudioSource: {fileID: 7089152173956966359}
   shootSfx: {fileID: 0}
+  photonView: {fileID: 2056960471353706094}
 --- !u!135 &4627565783332899403
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour
     public GameObject[] spawnPoints;
     public GameObject enemyPrefab;
 
+    void Start()
+    {
+        spawnPoints = GameObject.FindGameObjectsWithTag("Spawners");
+    }
     // Update is called once per frame
     void Update()
     {
