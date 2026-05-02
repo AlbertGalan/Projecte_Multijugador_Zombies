@@ -1,3 +1,4 @@
+using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -11,9 +12,21 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public string multiplayerSceneGameName = "MultiplayerGame";
     void Start()
     {
-        Debug.Log("Connecting to Photon...");
-        PhotonNetwork.ConnectUsingSettings();
+        // Si ya estamos conectados, únirse al lobby; si no, conectarse.
+        if (PhotonNetwork.IsConnected)
+        {
+            Debug.Log("Already connected to Photon. Joining lobby...");
+            PhotonNetwork.JoinLobby();
+        }
+        else
+        {
+            Debug.Log("Connecting to Photon...");
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
+    
+
+
 
     // Update is called once per frame
     void Update()
@@ -23,24 +36,25 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Unir-mos a un lobby...");
+        Debug.Log("OnConnectedToMaster: joining lobby...");
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("A punt per unir-mos a una sala...");
-        multiplayerButton.interactable = true;
+        Debug.Log("OnJoinedLobby: ready to join or create rooms");
+        if (multiplayerButton != null) multiplayerButton.interactable = true;
     }
 
     public void FindMatch()
     {
-        Debug.Log("Cercant partida...");
+        Debug.Log("FindMatch: attempting JoinRandomRoom...");
         PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
+        Debug.LogWarning($"OnJoinRandomFailed: {returnCode} - {message} ; creating room...");
         MakeRoom();
     }
 
@@ -54,14 +68,36 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
             MaxPlayers = 6,
             PublishUserId = true
         };
-        Debug.Log("Creant una nova sala...");
-        PhotonNetwork.CreateRoom($"$RoomName_{randomRoomNumber}", roomOptions);
-        Debug.Log($"Sala creada: $RoomName_{randomRoomNumber}");
+        string roomName = $"Room_{randomRoomNumber}";
+        Debug.Log($"Creating new room: {roomName}...");
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
+        Debug.Log($"Requested room creation: {roomName}");
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log($"Carregar Escena del joc MP: {PhotonNetwork.CurrentRoom.Name}");
+        Debug.Log($"OnJoinedRoom: joined {PhotonNetwork.CurrentRoom.Name}. Loading scene {multiplayerSceneGameName}...");
         PhotonNetwork.LoadLevel(multiplayerSceneGameName);
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Debug.LogError($"OnCreateRoomFailed: {returnCode} - {message}");
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"OnPlayerEnteredRoom: {newPlayer.NickName} (ID:{newPlayer.UserId})");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogWarning($"OnDisconnected: {cause}");
+    }
+
+    public void LoadMainMenu()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("MainMenu");
     }
 }

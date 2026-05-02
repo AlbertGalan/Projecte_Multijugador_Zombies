@@ -53598,6 +53598,8 @@ MonoBehaviour:
   gameOverMainMenuButton: {fileID: 2117848330}
   gameSceneName: Game
   mainMenuSceneName: MainMenu
+  isPaused: 0
+  isGameOver: 0
 --- !u!1001 &859481350
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84867,6 +84869,75 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8243101643004732111, guid: cc727c43277178849aa8303563cf07fd, type: 3}
   m_PrefabInstance: {fileID: 1421623067}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1422165568
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2056960471353706094, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: sceneViewId
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.16494
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.03712
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 29.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 2641360863424471999, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032435098187242757, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: m_Name
+      value: First_Person_Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4911403606441476494, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8505153964933617382, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a2cea2d30de238d4b9218245fc3ac8bf, type: 3}
 --- !u!1001 &1424574806
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -97645,7 +97716,21 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 2126246963}
   - {fileID: 1781561065}
-  enemyPrefab: {fileID: 7237887403474013486, guid: e75ad5b2b3cd9f74a8288335fb2224f7, type: 3}
+  photonView: {fileID: 0}
+  pausePanel: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  pauseResumeButton: {fileID: 0}
+  pauseExitButton: {fileID: 0}
+  gameOverRestartButton: {fileID: 0}
+  gameOverMainMenuButton: {fileID: 0}
+  gameSceneNameOff: Game
+  gameSceneNameOn: Game Online
+  mainMenuSceneName: MainMenu
+  multMenuSceneName: MultiplayerMenu
+  roundText: {fileID: 0}
+  isPaused: 0
+  isGameOver: 0
+  playerManager: {fileID: 0}
 --- !u!4 &1634950406
 Transform:
   m_ObjectHideFlags: 0
@@ -128316,6 +128401,7 @@ MonoBehaviour:
   mouseSensibility: 100
   minVerticalAngle: -45
   maxVerticalAngle: 65
+  photonView: {fileID: 0}
 --- !u!114 &7942916760379684781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128340,6 +128426,7 @@ MonoBehaviour:
   jumpHeight: 1.5
   coyoteTime: 0.1
   jumpBufferTime: 0.12
+  photonView: {fileID: 0}
 --- !u!143 &7942916760379684782
 CharacterController:
   m_ObjectHideFlags: 0
@@ -128382,9 +128469,10 @@ MonoBehaviour:
   gameManager: {fileID: 1634950405}
   healthText: {fileID: 1287171708}
   scoreText: {fileID: 529327699}
-  roundText: {fileID: 2147155508}
   playerCameraTransform: {fileID: 941214857}
   hitPanel: {fileID: 1477817741}
+  activeWeapon: {fileID: 0}
+  photonView: {fileID: 0}
 --- !u!114 &7942916760379684784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128404,6 +128492,9 @@ MonoBehaviour:
   shootAnimationDuration: 0.1
   shootAudioSource: {fileID: 7942916760379684787}
   shootSfx: {fileID: 0}
+  shootEffect: {fileID: 0}
+  photonView: {fileID: 0}
+  gameManager: {fileID: 0}
 --- !u!135 &7942916760379684786
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -128539,3 +128630,4 @@ SceneRoots:
   - {fileID: 859465107}
   - {fileID: 794044185}
   - {fileID: 176434096}
+  - {fileID: 1422165568}

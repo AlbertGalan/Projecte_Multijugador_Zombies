@@ -6,21 +6,21 @@ using UnityEngine.UI;
 public class GameMenuManager : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] public GameObject pausePanel;
+    [SerializeField] public GameObject gameOverPanel;
 
     [Header("Buttons")]
-    [SerializeField] private Button pauseResumeButton;
-    [SerializeField] private Button pauseExitButton;
-    [SerializeField] private Button gameOverRestartButton;
-    [SerializeField] private Button gameOverMainMenuButton;
+    [SerializeField] public Button pauseResumeButton;
+    [SerializeField] public Button pauseExitButton;
+    [SerializeField] public Button gameOverRestartButton;
+    [SerializeField] public Button gameOverMainMenuButton;
 
     [Header("Scenes")]
     [SerializeField] private string gameSceneName = "Game";
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
-    private bool isPaused;
-    private bool isGameOver;
+    public bool isPaused;
+    public bool isGameOver;
 
     private void Awake()
     {

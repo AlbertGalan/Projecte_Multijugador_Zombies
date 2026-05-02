@@ -31075,6 +31075,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4996209151633698329, guid: e75ad5b2b3cd9f74a8288335fb2224f7, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7237887403474013486, guid: e75ad5b2b3cd9f74a8288335fb2224f7, type: 3}
       propertyPath: m_Name
       value: Zombie
@@ -47875,7 +47879,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 859115012}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1872252055}
+        m_TargetAssemblyTypeName: NetworkingManager, Assembly-CSharp
+        m_MethodName: LoadMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &859115012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48062,7 +48078,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 863513260}
   m_OnClick:
     m_PersistentCalls:
@@ -75383,6 +75399,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4996209151633698329, guid: e75ad5b2b3cd9f74a8288335fb2224f7, type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7237887403474013486, guid: e75ad5b2b3cd9f74a8288335fb2224f7, type: 3}
       propertyPath: m_Name
       value: Zombie (1)
@@ -104536,7 +104556,6 @@ GameObject:
   - component: {fileID: 1872252051}
   - component: {fileID: 1872252050}
   - component: {fileID: 1872252055}
-  - component: {fileID: 1872252054}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -104629,22 +104648,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1872252054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1872252049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af4a906b794a22e4dbe34e3a6733236c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MainMenuHUDManager
-  playButton: {fileID: 859115011}
-  multiplayerButton: {fileID: 0}
-  exitButton: {fileID: 0}
-  gameSceneName: MainMenu
 --- !u!114 &1872252055
 MonoBehaviour:
   m_ObjectHideFlags: 0

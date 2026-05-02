@@ -12,9 +12,13 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private float shootAnimationDuration = 0.1f;
     [SerializeField] private AudioSource shootAudioSource;
     [SerializeField] private AudioClip shootSfx;
+    [SerializeField] private GameObject shootEffect;
 
     public PhotonView photonView;
+
+    public GameManager gameManager;
     private PlayerManager playerManager;
+    
 
     private void Start()
     {
@@ -33,6 +37,22 @@ public class WeaponManager : MonoBehaviour
         {
             shootAudioSource = GetComponent<AudioSource>();
         }
+
+        if (shootEffect != null)
+        {
+            ParticleSystem particleSystem = shootEffect.GetComponent<ParticleSystem>();
+            if (particleSystem != null)
+            {
+                ParticleSystem.MainModule main = particleSystem.main;
+                main.stopAction = ParticleSystemStopAction.None;
+            }
+
+            CFX_AutoDestructShuriken autoDestruct = shootEffect.GetComponent<CFX_AutoDestructShuriken>();
+            if (autoDestruct != null)
+            {
+                autoDestruct.OnlyDeactivate = true;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -43,7 +63,9 @@ public class WeaponManager : MonoBehaviour
 			return;
 		}
         
-        if (Cursor.lockState != CursorLockMode.Locked)
+        if(!gameManager.isPaused && !gameManager.isGameOver)
+        {
+            if (Cursor.lockState != CursorLockMode.Locked)
         {
             return;
         }
@@ -53,26 +75,23 @@ public class WeaponManager : MonoBehaviour
             Debug.Log("Fire1 pressed");
             Shoot();
         }
+        }
     }
 
     void Shoot()
     {
+        if(PhotonNetwork.InRoom)
+        {
+            photonView.RPC("WeaponShootSFX", RpcTarget.All, photonView.ViewID);
+        }
+        else
+        {
+            ShootVFX(photonView.ViewID);
+        }
         if (playerCam == null)
         {
             Debug.LogWarning("WeaponManager: playerCam no assignada.");
             return;
-        }
-
-        if (shootAudioSource != null)
-        {
-            if (shootSfx != null)
-            {
-                shootAudioSource.PlayOneShot(shootSfx);
-            }
-            else
-            {
-                shootAudioSource.Play();
-            }
         }
 
         if (weaponAnimator != null)
@@ -87,17 +106,47 @@ public class WeaponManager : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
+     // Dentro de WeaponManager.cs, en el método Shoot()
+if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
+{
+    EnemyManager enemy = hit.transform.GetComponent<EnemyManager>();
+    if (enemy != null)
+    {
+        // Pasamos el daño y el ViewID de nuestro PLAYER
+        enemy.Hit(damage, playerManager.photonView.ViewID);
+    }
+}
+
+        
+    }
+
+    public void ShootVFX(int viewID)
+    {
+        if(photonView.ViewID == viewID)
         {
-            EnemyManager enemyManager = hit.transform.GetComponent<EnemyManager>();
-            if (enemyManager != null)
+            if (shootAudioSource != null)
+        {
+            if (shootSfx != null)
             {
-                bool enemyKilled = enemyManager.Hit(damage);
-                if (enemyKilled && playerManager != null)
-                {
-                    playerManager.AddScore(enemyManager.ScoreValue);
-                }
+                shootAudioSource.PlayOneShot(shootSfx);
             }
+            else
+            {
+                shootAudioSource.Play();
+            }
+        }
+
+        if (shootEffect != null)
+        {
+            shootEffect.SetActive(true);
+
+            ParticleSystem particleSystem = shootEffect.GetComponent<ParticleSystem>();
+            if (particleSystem != null)
+            {
+                particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                particleSystem.Play();
+            }
+        }
         }
     }
 
@@ -108,4 +157,5 @@ public class WeaponManager : MonoBehaviour
             weaponAnimator.SetBool("isShooting", false);
         }
     }
+    
 }

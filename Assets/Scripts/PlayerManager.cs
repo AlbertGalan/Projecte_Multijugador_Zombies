@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private TMP_Text scoreText;
-    [SerializeField] private TMP_Text roundText;
+   // [SerializeField] private TMP_Text roundText;
 
     [Header("Efectes de Dany (Camera Shake)")]
     public Transform playerCameraTransform; // Assigna aquí la Càmera (filla del pivote)
@@ -29,6 +29,8 @@ public class PlayerManager : MonoBehaviour
     private bool isDead;
 
     public int CurrentScore => score;
+
+    public GameObject activeWeapon; // Referència a l'arma actual del jugador
 
     public PhotonView photonView;
     void Start()
@@ -92,7 +94,22 @@ public class PlayerManager : MonoBehaviour
 
     public void Hit(float damage)
     {
-        if (isDead) return;
+        if (PhotonNetwork.InRoom)
+        {
+            photonView.RPC("PlayerTakeDamage", RpcTarget.All, damage, photonView.ViewID);
+        }
+        else
+        {
+            PlayerTakeDamage(damage, photonView.ViewID);
+        }
+    }
+
+    [PunRPC]
+    public void PlayerTakeDamage(float damage, int viewID)
+    {
+        if (photonView.ViewID == viewID)
+        {
+                   if (isDead) return;
 
         health -= damage;
         shakeTime = 0f; // Dispara el vibrat a l'Update
@@ -112,6 +129,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         UpdateHUD();
+        }
     }
 
     public void CameraShake()
@@ -126,6 +144,22 @@ public class PlayerManager : MonoBehaviour
     public void AddScore(int amount)
     {
         if (amount <= 0 || isDead) return;
+
+        if (PhotonNetwork.InRoom && photonView.IsMine)
+        {
+            photonView.RPC("RPC_AddScore", RpcTarget.All, amount);
+        }
+        else if (!PhotonNetwork.InRoom)
+        {
+            score += amount;
+            UpdateHUD();
+        }
+    }
+
+    [PunRPC]
+    public void RPC_AddScore(int amount)
+    {
+        if (isDead) return;
         score += amount;
         UpdateHUD();
     }
@@ -133,9 +167,28 @@ public class PlayerManager : MonoBehaviour
     public bool TrySpendScore(int amount)
     {
         if (amount <= 0 || isDead || score < amount) return false;
-        score -= amount;
-        UpdateHUD();
+
+        if (PhotonNetwork.InRoom && photonView.IsMine)
+        {
+            photonView.RPC("RPC_SpendScore", RpcTarget.All, amount);
+        }
+        else if (!PhotonNetwork.InRoom)
+        {
+            score -= amount;
+            UpdateHUD();
+            return true;
+        }
         return true;
+    }
+
+    [PunRPC]
+    public void RPC_SpendScore(int amount)
+    {
+        if (score >= amount)
+        {
+            score -= amount;
+            UpdateHUD();
+        }
     }
 
     private void UpdateHUD()
@@ -147,7 +200,14 @@ public class PlayerManager : MonoBehaviour
             healthText.text = "Salut: " + $"{currentHealth}/{maxHealthInt}";
         }
         if (scoreText != null) scoreText.text = "Puntuació: " + score.ToString();
-        if (roundText != null && gameManager != null)
+      /*  if (roundText != null && gameManager != null)
             roundText.text = "Ronda: " + gameManager.round.ToString();
+    
+    */}
+
+    [PunRPC]
+    public void WeaponShootSFX(int viewID)
+    {
+      activeWeapon.GetComponent<WeaponManager>().ShootVFX(viewID);
     }
 }

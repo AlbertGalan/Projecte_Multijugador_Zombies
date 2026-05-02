@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,10 +27,14 @@ public class EnemyManager : MonoBehaviour
 
     public int ScoreValue => scoreValue;
 
+    public PhotonView photonView;
+
+    private GameObject[] playersInScene;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player");
+        playersInScene = GameObject.FindGameObjectsWithTag("Player");
 
         if (enemyAnimator == null)
         {
@@ -36,36 +42,46 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    void Update()
+void Update()
+{
+    // IMPORTANTE: Solo el MasterClient debe mover al zombie para evitar desincronización
+    if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient) return;
+
+    if (isDead || agent == null) return;
+
+    // Actualizamos la lista de jugadores dinámicamente si está vacía o cada poco tiempo
+    playersInScene = GameObject.FindGameObjectsWithTag("Player");
+
+    GetClosestPlayer();
+
+    if (player == null) return; 
+
+    if (playerInReach)
     {
-        if (isDead || agent == null || player == null) return;
+        agent.isStopped = true; // Mejor que ResetPath
+        if (enemyAnimator != null) enemyAnimator.SetBool("isRunning", false);
 
-        if (playerInReach)
+        if (Time.time >= nextAttackTime)
         {
-            agent.ResetPath();
-            if (enemyAnimator != null) enemyAnimator.SetBool("isRunning", false);
-
-            // LÓGICA DE ATAQUE POR GOLPES
-            if (Time.time >= nextAttackTime)
-            {
-                AttackPlayer();
-                nextAttackTime = Time.time + attackCooldown;
-            }
-            return;
+            AttackPlayer();
+            nextAttackTime = Time.time + attackCooldown;
         }
-
-        // Movimiento hacia el jugador
-        Vector3 targetPosition = player.transform.position;
-        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, destinationSampleRadius, NavMesh.AllAreas))
-        {
-            agent.SetDestination(hit.position);
-        }
-
-        if (enemyAnimator != null)
-        {
-            enemyAnimator.SetBool("isRunning", agent.velocity.magnitude > runSpeedThreshold);
-        }
+        return;
     }
+
+    // Movimiento
+    agent.isStopped = false;
+    Vector3 targetPosition = player.transform.position;
+    if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, destinationSampleRadius, NavMesh.AllAreas))
+    {
+        agent.SetDestination(hit.position);
+    }
+
+    if (enemyAnimator != null)
+    {
+        enemyAnimator.SetBool("isRunning", agent.velocity.magnitude > runSpeedThreshold);
+    }
+}
 
     // Nuevo método para atacar
     void AttackPlayer()
@@ -75,10 +91,20 @@ public class EnemyManager : MonoBehaviour
             enemyAnimator.SetTrigger("isAttacking");
         }
 
-        // Aplicamos el daño directo (20 de vida)
-        if (playerManager != null)
+        // Sincronizamos el ataque a través de la red
+        if (player != null)
         {
-            playerManager.Hit(damage); 
+            if (PhotonNetwork.InRoom)
+            {
+                photonView.RPC("DealDamageToPlayer", RpcTarget.All, player.GetComponent<PhotonView>().ViewID, damage);
+            }
+            else
+            {
+                if (playerManager != null)
+                {
+                    playerManager.Hit(damage);
+                }
+            }
             Debug.Log("¡El zombie ha golpeado al jugador! Daño: " + damage);
         }
     }
@@ -106,24 +132,95 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public bool Hit(float damage)
-    {
-        if (isDead) return false;
-        health -= damage;
-        if (health <= 0f)
-        {
-            Die();
-            return true;
-        }
-        return false;
-    }
+// Modifica el método Hit para recibir el ID del atacante
+public void Hit(float dmg, int shooterID)
+{
+    if (isDead) return;
 
+    if (PhotonNetwork.InRoom)
+    {
+        // Enviamos el daño y quién disparó a todos
+        photonView.RPC("TakeDamage", RpcTarget.All, dmg, shooterID);
+    }
+    else
+    {
+        ApplyDamage(dmg, shooterID);
+    }
+}
+
+[PunRPC]
+public void TakeDamage(float dmg, int shooterID)
+{
+    ApplyDamage(dmg, shooterID);
+}
+
+private void ApplyDamage(float dmg, int shooterID)
+{
+    if (isDead) return;
+    health -= dmg;
+
+    if (health <= 0)
+    {
+        // Buscamos al jugador que disparó mediante su ViewID para darle puntos
+        PhotonView shooterPV = PhotonView.Find(shooterID);
+        if (shooterPV != null)
+        {
+            PlayerManager pm = shooterPV.GetComponent<PlayerManager>();
+            if (pm != null) pm.AddScore(scoreValue);
+        }
+
+        Die();
+    }
+}
     private void Die()
     {
         isDead = true;
         agent.isStopped = true;
         if (enemyAnimator != null) enemyAnimator.SetTrigger("isDead");
-        if (gameManager != null) gameManager.enemiesAlive--;
+        if (gameManager != null)
+        {
+            gameManager.enemiesAlive--;
+
+            // Sincronizar enemiesAlive en multijugador (sólo MasterClient debe publicar)
+            if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+            {
+                Hashtable hash = new Hashtable();
+                hash["enemiesAlive"] = gameManager.enemiesAlive;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+            }
+        }
         Destroy(gameObject, 3f);
+    }
+
+    private void GetClosestPlayer()
+    {
+        GameObject closestPlayer = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (GameObject playerObj in playersInScene)
+        {
+            float distance = Vector3.Distance(transform.position, playerObj.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestPlayer = playerObj;
+            }
+        }
+
+        player = closestPlayer;
+    }
+
+    [PunRPC]
+    public void DealDamageToPlayer(int playerViewID, float dmg)
+    {
+        PhotonView playerPV = PhotonView.Find(playerViewID);
+        if (playerPV != null)
+        {
+            PlayerManager pm = playerPV.GetComponent<PlayerManager>();
+            if (pm != null)
+            {
+                pm.PlayerTakeDamage(dmg, playerViewID);
+            }
+        }
     }
 }

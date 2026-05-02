@@ -631,6 +631,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5319574516876100719}
   - component: {fileID: 6761289455942990908}
+  - component: {fileID: 8505153964933617382}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -670,7 +671,43 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 0}
   - {fileID: 0}
-  enemyPrefab: {fileID: 7237887403474013486, guid: e75ad5b2b3cd9f74a8288335fb2224f7, type: 3}
+  photonView: {fileID: 8505153964933617382}
+  pausePanel: {fileID: 1350612562191144844}
+  gameOverPanel: {fileID: 341057559697088669}
+  pauseResumeButton: {fileID: 860204907321639890}
+  pauseExitButton: {fileID: 3808325829124214148}
+  gameOverRestartButton: {fileID: 2135824430828236854}
+  gameOverMainMenuButton: {fileID: 4486709344971855274}
+  gameSceneNameOff: Game
+  gameSceneNameOn: Game Online
+  mainMenuSceneName: MainMenu
+  multMenuSceneName: MultiplayerMenu
+  roundText: {fileID: 2391591402487750783}
+  isPaused: 0
+  isGameOver: 0
+  playerManager: {fileID: 271913122203962686}
+--- !u!114 &8505153964933617382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981471969065507997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2048852037400706169
 GameObject:
   m_ObjectHideFlags: 0
@@ -827,6 +864,7 @@ GameObject:
   - component: {fileID: 4627565783332899403}
   - component: {fileID: 7089152173956966359}
   - component: {fileID: 2056960471353706094}
+  - component: {fileID: 2577183226349604832}
   m_Layer: 0
   m_Name: First_Person_Player
   m_TagString: Player
@@ -939,9 +977,9 @@ MonoBehaviour:
   gameManager: {fileID: 6761289455942990908}
   healthText: {fileID: 8925622354428787477}
   scoreText: {fileID: 2239458053987063531}
-  roundText: {fileID: 2391591402487750783}
   playerCameraTransform: {fileID: 1035704972578990855}
   hitPanel: {fileID: 8309608712939186002}
+  activeWeapon: {fileID: 4394556688822922566}
   photonView: {fileID: 2056960471353706094}
 --- !u!114 &8610594516215382309
 MonoBehaviour:
@@ -950,7 +988,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3032435098187242757}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13f0997207352194c8b9df6e18f30699, type: 3}
   m_Name: 
@@ -961,8 +999,10 @@ MonoBehaviour:
   weaponAnimator: {fileID: 0}
   shootAnimationDuration: 0.1
   shootAudioSource: {fileID: 7089152173956966359}
-  shootSfx: {fileID: 0}
+  shootSfx: {fileID: 8300000, guid: 42dc462760399f045a6950b4c7474e7a, type: 3}
+  shootEffect: {fileID: 0}
   photonView: {fileID: 2056960471353706094}
+  gameManager: {fileID: 6761289455942990908}
 --- !u!135 &4627565783332899403
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1041,7 +1081,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1099,10 +1139,29 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 2577183226349604832}
+  - {fileID: 7993166253505169049}
+  - {fileID: 2245082028181921566}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2577183226349604832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3032435098187242757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &3168715635211935416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,9 +1219,9 @@ Canvas:
   m_GameObject: {fileID: 3168715635211935416}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 8438639792179649727}
+  m_PlaneDistance: 0.15
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1222,7 +1281,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3168715635211935416}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a7da8d4f17f5ed42a221ba6b59779cc, type: 3}
   m_Name: 
@@ -1235,6 +1294,8 @@ MonoBehaviour:
   gameOverMainMenuButton: {fileID: 4486709344971855274}
   gameSceneName: Game
   mainMenuSceneName: MainMenu
+  isPaused: 0
+  isGameOver: 0
 --- !u!1 &3272524697144188184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,6 +1798,10 @@ GameObject:
   - component: {fileID: 4565920743698018158}
   - component: {fileID: 8665415879707926215}
   - component: {fileID: 1858226869423189366}
+  - component: {fileID: 4033429959843071276}
+  - component: {fileID: 7285488228780838136}
+  - component: {fileID: 4911403606441476494}
+  - component: {fileID: 226162964763908240}
   m_Layer: 0
   m_Name: weapon
   m_TagString: Untagged
@@ -1817,6 +1882,164 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4033429959843071276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4394556688822922566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f0997207352194c8b9df6e18f30699, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponManager
+  playerCam: {fileID: 8745233923889322483}
+  range: 100
+  damage: 25
+  weaponAnimator: {fileID: 1870925680208542391}
+  shootAnimationDuration: 0.1
+  shootAudioSource: {fileID: 7285488228780838136}
+  shootSfx: {fileID: 0}
+  shootEffect: {fileID: 0}
+  photonView: {fileID: 2056960471353706094}
+  gameManager: {fileID: 6761289455942990908}
+--- !u!82 &7285488228780838136
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4394556688822922566}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 42dc462760399f045a6950b4c7474e7a, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &4911403606441476494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4394556688822922566}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 226162964763908240}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &226162964763908240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4394556688822922566}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &4455150640111827499
 GameObject:
   m_ObjectHideFlags: 0
@@ -3721,6 +3944,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1418090117773498591}
   - component: {fileID: 1870925680208542391}
+  - component: {fileID: 7993166253505169049}
+  - component: {fileID: 2245082028181921566}
   m_Layer: 0
   m_Name: FPS_Character
   m_TagString: Untagged
@@ -3767,6 +3992,43 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7993166253505169049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769386357091352328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &2245082028181921566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769386357091352328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonAnimatorView
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 2
+    Name: isShooting
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
 --- !u!1 &7832270289254823573
 GameObject:
   m_ObjectHideFlags: 0
