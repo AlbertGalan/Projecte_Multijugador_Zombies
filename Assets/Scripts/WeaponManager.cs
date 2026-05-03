@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
-    public GameObject playerCam; // Fa referencia a la camera del jugador FPS
+    public GameObject playerCam; 
     public float range = 100f; // Fins on volem que arribin els tirs
     public float damage = 25f;
 
@@ -106,13 +106,12 @@ public class WeaponManager : MonoBehaviour
         }
 
         RaycastHit hit;
-     // Dentro de WeaponManager.cs, en el método Shoot()
 if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
 {
     EnemyManager enemy = hit.transform.GetComponent<EnemyManager>();
     if (enemy != null)
     {
-        // Pasamos el daño y el ViewID de nuestro PLAYER
+        // Pasam el mal i el viewId del nostre jugador
         enemy.Hit(damage, playerManager.photonView.ViewID);
     }
 }

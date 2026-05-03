@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
     public GameObject player;
     public GameManager gameManager;
     public Animator enemyAnimator;
-    public float damage = 20f; // Ahora quitará 20 por golpe
+    public float damage = 20f; 
 
     public float health = 100f;
     [SerializeField] private int scoreValue = 100;
@@ -22,7 +22,7 @@ public class EnemyManager : MonoBehaviour
     private bool isDead;
     
     [Header("Ajustes de Ataque")]
-    public float attackCooldown = 1.5f; // Tiempo entre ataques
+    public float attackCooldown = 1.5f; // Cooldown entre atacs
     private float nextAttackTime;
 
     public int ScoreValue => scoreValue;
@@ -44,12 +44,12 @@ public class EnemyManager : MonoBehaviour
 
 void Update()
 {
-    // IMPORTANTE: Solo el MasterClient debe mover al zombie para evitar desincronización
+    // Només el MasterClient controla el moviment i les accions dels enemics per evitar conflictes entre clients
     if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient) return;
 
     if (isDead || agent == null) return;
 
-    // Actualizamos la lista de jugadores dinámicamente si está vacía o cada poco tiempo
+    // Actualizam la llista de jugadors a l'escena cada frame per assegurar-nos que tenim la informació més recent (jugadors que entren/surten)
     playersInScene = GameObject.FindGameObjectsWithTag("Player");
 
     GetClosestPlayer();
@@ -58,7 +58,7 @@ void Update()
 
     if (playerInReach)
     {
-        agent.isStopped = true; // Mejor que ResetPath
+        agent.isStopped = true;
         if (enemyAnimator != null) enemyAnimator.SetBool("isRunning", false);
 
         if (Time.time >= nextAttackTime)
@@ -69,7 +69,7 @@ void Update()
         return;
     }
 
-    // Movimiento
+    // Moviment
     agent.isStopped = false;
     Vector3 targetPosition = player.transform.position;
     if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, destinationSampleRadius, NavMesh.AllAreas))
@@ -83,7 +83,7 @@ void Update()
     }
 }
 
-    // Nuevo método para atacar
+    // Nou mètode per atacar al jugador
     void AttackPlayer()
     {
         if (enemyAnimator != null)
@@ -91,7 +91,7 @@ void Update()
             enemyAnimator.SetTrigger("isAttacking");
         }
 
-        // Sincronizamos el ataque a través de la red
+        // Sincronitzam el mal al jugador a través de RPC per assegurar-nos que tots els clients veuen el mateix
         if (player != null)
         {
             if (PhotonNetwork.InRoom)
@@ -121,7 +121,7 @@ void Update()
         }
     }
 
-    // Eliminamos OnCollisionStay para que no quite vida por "rozar" al jugador
+    // Eliminam OnCollisionStay per que no llevi vida por "rozar" al jugador
     
     private void OnCollisionExit(Collision collision)
     {
@@ -161,7 +161,7 @@ private void ApplyDamage(float dmg, int shooterID)
 
     if (health <= 0)
     {
-        // Buscamos al jugador que disparó mediante su ViewID para darle puntos
+        // Cercam al jugador que ha matat al zombie per donar-li punts
         PhotonView shooterPV = PhotonView.Find(shooterID);
         if (shooterPV != null)
         {
@@ -181,7 +181,7 @@ private void ApplyDamage(float dmg, int shooterID)
         {
             gameManager.enemiesAlive--;
 
-            // Sincronizar enemiesAlive en multijugador (sólo MasterClient debe publicar)
+            // Sincronitzar el nombre d'enemics a la sala per a tots els clients
             if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
             {
                 Hashtable hash = new Hashtable();

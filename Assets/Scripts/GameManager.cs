@@ -292,14 +292,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         Cursor.visible = true;
     }
 
-  // Manejo de propiedades de sala y sincronización al unirse
+  // Control de propietats de sa sala per sincronitzar ronda i enemics
 public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) 
 {
     if (propertiesThatChanged.ContainsKey("currentRound"))
     {
         int networkRound = (int)propertiesThatChanged["currentRound"];
-        this.round = networkRound; // Actualiza la variable local para que el cliente sepa en qué ronda está
-        DisplayNextRoundText(networkRound);
+        this.round = networkRound; // Actualitza la variable local 
     }
 
     if (propertiesThatChanged.ContainsKey("enemiesAlive"))
@@ -312,7 +311,7 @@ public override void OnJoinedRoom()
 {
     base.OnJoinedRoom();
 
-    // Sincronizar estado de la sala para jugadores que se unen
+    // Sincronitzar la ronda i els enemics quan un jugador s'uneix a la sala
     if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.CustomProperties != null)
     {
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("currentRound"))

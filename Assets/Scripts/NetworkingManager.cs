@@ -24,9 +24,6 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
         }
     }
-    
-
-
 
     // Update is called once per frame
     void Update()

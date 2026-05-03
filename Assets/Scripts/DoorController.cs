@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.InputSystem; // Asegúrate de tener el paquete instalado
+using UnityEngine.InputSystem;
 
 public class DoorController : MonoBehaviour
 {
@@ -18,7 +18,6 @@ public class DoorController : MonoBehaviour
 
     void Start()
     {
-        // 1. Verificación de seguridad inicial
         if (interactionText != null) 
         {
             interactionText.gameObject.SetActive(false);
@@ -28,18 +27,18 @@ public class DoorController : MonoBehaviour
         {
             doorAnimator = GetComponent<Animator>();
             if (doorAnimator == null)
-                Debug.LogWarning($"No se encontró Animator en {gameObject.name}. Por favor, asígnalo en el Inspector.");
+                Debug.LogWarning($"No s'ha trobat l'Animator a{gameObject.name}. Per favor, asignar-ho al Inspector.");
         }
     }
 
     void Update()
     {
-        // 2. Solo procesamos si el jugador está cerca y la puerta está cerrada
+        // 2. Només permetre obrir la porta si el jugador està a prop i no està ja oberta
         if (playerInRange && !isOpened)
         {
             UpdateInteractionMessage();
 
-            // 3. Verificación de tecla usando el New Input System
+            // 3. Verificació de la tecla E per intentar obrir la porta
             if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             {
                 TryOpenDoor();
@@ -63,15 +62,14 @@ public class DoorController : MonoBehaviour
 
     private void TryOpenDoor()
     {
-        // Intentamos gastar los puntos usando el método que ya tienes en PlayerManager
+        // Intentam gastar els punts del jugador per obrir la porta
         if (playerManager.TrySpendScore(doorCost))
         {
             OpenDoor();
         }
         else
         {
-            Debug.Log("Puntos insuficientes");
-            // Aquí podrías añadir un sonido de "error" o denegado
+            Debug.Log("Punts insuficients");
         }
     }
 
@@ -79,26 +77,23 @@ public class DoorController : MonoBehaviour
     {
         isOpened = true;
 
-        // 4. Activación de la animación
+        // Obrim la porta amb l'animació
         if (doorAnimator != null)
         {
             doorAnimator.SetBool(openParameter, true);
         }
 
-        // 5. Limpieza del HUD y desactivación de lógica
         if (interactionText != null) 
         {
             interactionText.gameObject.SetActive(false);
         }
 
-        // Desactivamos el trigger para que no siga detectando al jugador
         Collider trigger = GetComponent<Collider>();
         if (trigger != null) 
         {
             trigger.enabled = false;
         }
 
-        // Desactivamos este script para ahorrar recursos (la animación seguirá corriendo)
         this.enabled = false; 
     }
 

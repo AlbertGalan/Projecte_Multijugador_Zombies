@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using Photon.Pun;
 public class MouseLook : MonoBehaviour
 {
-    public Transform cameraPivot; // Assigna aquí el "CameraPivot" (pare de la càmera)
+    public Transform cameraPivot;
     public Transform armsAndWeaponPivot;
     public float mouseSensibility = 150f;
     public float minVerticalAngle = -70f;
@@ -39,7 +39,7 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, minVerticalAngle, maxVerticalAngle);
 
-        // Rotem el PIVOT, deixant la rotació local de la càmera lliure per al Shake
+        // Rotam el PIVOT, deixant la rotació local de la càmera lliure per es Shake
         if (cameraPivot != null)
         {
             cameraPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);

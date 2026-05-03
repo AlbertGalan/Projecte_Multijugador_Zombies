@@ -16,7 +16,7 @@ public class PlayerManager : MonoBehaviour
    // [SerializeField] private TMP_Text roundText;
 
     [Header("Efectes de Dany (Camera Shake)")]
-    public Transform playerCameraTransform; // Assigna aquí la Càmera (filla del pivote)
+    public Transform playerCameraTransform;
     private float shakeTime = 1f; 
     private float shakeDuration = 0.5f;
     private Quaternion cameraInitialLocalRotation;
